@@ -1,7 +1,16 @@
 from flask import Flask
+from os import environ
+from init import *
 
-app = Flask(__name__)
+def create_app():
+    # Initialize app by creating flask app object
+    app = Flask(__name__)
+    
+    # Obtains secured JWT_KEY and DATABASE_URI connection values from .env
+    app.config['JWT_SECRET_KEY'] = environ.get('SECRET_KEY')
+    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
 
-@app.route('/')
-def index():
-    return 'Hello to my API, this is the main page (for now)'
+    # Initialized object from init file for use
+    db.init_app(app)
+
+    return app
