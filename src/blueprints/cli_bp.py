@@ -1,5 +1,5 @@
 from flask import Blueprint
-from app import db
+from app import db, bcrypt
 from models.user import User
 from models.venue import Venue
 from models.event import Event
@@ -24,13 +24,13 @@ def seed_db():
         User(
             username = "admin",
             email = 'admin@foo.com',
-            password = 'dizzyjungle',
+            password = bcrypt.generate_password_hash('dizzyjungle').decode('utf8'),
             is_admin = True
         ),
         User(
             username = 'Patron',
             email = 'patron@foo.com',
-            password = 'waterpark'
+            password = bcrypt.generate_password_hash('waterpark').decode('utf8')
         )
     ]
 
