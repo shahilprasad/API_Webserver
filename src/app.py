@@ -17,6 +17,12 @@ def create_app():
     db.init_app(app)
     ma.init_app(app)
     bcrypt.init_app(app)
+    jwt.init_app(app)
+
+    # Error handling whic returns JSON error messages
+    @app.errorhandler(401)
+    def unauthorized(err):
+        return {'error': str(err)}, 401
 
     app.register_blueprint(db_cmd)
     app.register_blueprint(venues_bp)
