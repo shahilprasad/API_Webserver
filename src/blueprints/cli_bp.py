@@ -42,13 +42,15 @@ def seed_db():
             name = "The Underground",
             address = "13 Main Street",
             suburb = "Narnia",
-            postcode = "2929"
+            postcode = "2929",
+            user_id = users[0].id
         ),
         Venue(
             name = "The Underground",
             address = "13 Main Street",
             suburb = "Narnia",
-            postcode = "2929"
+            postcode = "2929",
+            user_id = users[0].id
         )
     ]
 
@@ -77,15 +79,13 @@ def seed_db():
 
     queues = [
         Queue(
-            status = "Busy",
             wait_time = "5 Minutes",
-            last_updated = "18:30",
+            # last_updated = "18:30",
             comment = "Line is moving moderately fast"
         ),
         Queue(
-            status = "Busy",
             wait_time = "25 Minutes",
-            last_updated = "16:30",
+            # last_updated = "16:30",
             comment = "Line is moving slowly, long wait due to extra security measures"
         )
     ]

@@ -44,9 +44,9 @@ def login():
     # If the user exists and the password matches, return the user
     if user and bcrypt.check_password_hash(user.password, user_info['password']):
         # Create a JWT token for the user
-        token = create_access_token(identity=user.username, expires_delta=timedelta(hours=2))
+        token = create_access_token(identity=user.id, expires_delta=timedelta(hours=2))
         # Return the user and JWT token
-        return {'token': token, 'user': UserSchema(exclude=['password', 'is_admin', 'id']).dump(user)}
+        return {'token': token, 'user': UserSchema(exclude=['password', 'is_admin', 'id', 'venues']).dump(user)}
         
         # Otherwise, return an error message
     else:

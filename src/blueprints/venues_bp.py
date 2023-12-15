@@ -4,8 +4,13 @@ from models.venue import Venue, VenueSchema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy.exc import IntegrityError
 from auth import admin_only
+from blueprints.queues_bp import queues_bp
+from blueprints.events_bp import events_bp
 
 venues_bp = Blueprint('venues', __name__, url_prefix='/venues')
+
+venues_bp.register_blueprint(queues_bp)
+venues_bp.register_blueprint(events_bp)
 
 # Define a route for getting a list of all venues
 @venues_bp.route("/", methods=['GET'])
@@ -38,7 +43,8 @@ def create_venue():
         name = venue_info['name'],
         address = venue_info['address'],
         suburb = venue_info['suburb'],
-        postcode = venue_info['postcode']
+        postcode = venue_info['postcode'],
+        user_id = get_jwt_identity()
     )
     # Add the new venue to the database
     db.session.add(venue)

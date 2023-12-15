@@ -4,6 +4,7 @@ from init import *
 from blueprints.cli_bp import db_cmd
 from blueprints.venues_bp import venues_bp
 from blueprints.users_bp import users_bp
+from blueprints.events_bp import events_bp
 
 def create_app():
     # Initialize app by creating flask app object
@@ -27,5 +28,6 @@ def create_app():
     app.register_blueprint(db_cmd)
     app.register_blueprint(venues_bp)
     app.register_blueprint(users_bp)
+    app.register_blueprint(events_bp)
 
     return app
