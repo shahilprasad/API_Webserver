@@ -4,7 +4,7 @@ from models.user import User, UserSchema
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required
 from datetime import timedelta
-from auth import admin_only
+from auth import authorization
 
 users_bp = Blueprint('users', __name__, url_prefix='/users')
 
@@ -25,7 +25,7 @@ def register():
         db.session.commit()
 
         # Serialize new User instance to JSON, and return serialized User
-        return UserSchema(exclude=['password', 'is_admin']).dump(user), 201
+        return UserSchema(exclude=['password', 'is_admin', 'venues']).dump(user), 201
     
     # Return error message if username is already taken
     except IntegrityError:
@@ -57,7 +57,7 @@ def login():
 @users_bp.route('/', methods=['GET'])
 @jwt_required()
 def get_users():
-    admin_only()
+    authorization()
     stmt = db.select(User)
     users = db.session.scalars(stmt).all()
     return UserSchema(exclude=['password'], many=True).dump(users)

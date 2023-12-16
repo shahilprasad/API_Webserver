@@ -46,11 +46,11 @@ def seed_db():
             user_id = users[0].id
         ),
         Venue(
-            name = "The Underground",
-            address = "13 Main Street",
-            suburb = "Narnia",
-            postcode = "2929",
-            user_id = users[0].id
+            name = "Wild Wendy's",
+            address = "2 Lucky Street",
+            suburb = "Nirvana",
+            postcode = "3948",
+            user_id = users[1].id
         )
     ]
 
@@ -64,6 +64,8 @@ def seed_db():
             date = "2023-12-01",
             start_time = "12:00",
             end_time = "20:00",
+            venue_id = venues[0].id,
+            user_id = users[0].id
         ),
         Event(
             event_name = "Boiler House",
@@ -71,6 +73,8 @@ def seed_db():
             date = "2023-12-02",
             start_time = "14:00",
             end_time = "23:00",
+            venue_id = venues[1].id,
+            user_id = users[1].id
         )
     ]
 
@@ -80,13 +84,15 @@ def seed_db():
     queues = [
         Queue(
             wait_time = "5 Minutes",
-            # last_updated = "18:30",
-            comment = "Line is moving moderately fast"
+            last_updated = "2023-12-01 18:30",
+            comment = "Line is moving moderately fast",
+            venue_id = venues[0].id
         ),
         Queue(
             wait_time = "25 Minutes",
-            # last_updated = "16:30",
-            comment = "Line is moving slowly, long wait due to extra security measures"
+            last_updated = "2021-12-02 16:30",
+            comment = "Line is moving slowly, long wait due to extra security measures",
+            venue_id = venues[1].id
         )
     ]
 

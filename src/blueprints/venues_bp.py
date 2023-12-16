@@ -3,7 +3,7 @@ from init import db
 from models.venue import Venue, VenueSchema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy.exc import IntegrityError
-from auth import admin_only
+from auth import authorization
 from blueprints.queues_bp import queues_bp
 from blueprints.events_bp import events_bp
 
@@ -52,18 +52,42 @@ def create_venue():
 
     # Serialize new Venue instance to JSON, and return serialized Venue
     return VenueSchema().dump(venue), 201
+
+# Define a route for updating a venue
+@venues_bp.route("/<int:id>", methods=['PUT', 'PATCH'])
+@jwt_required()
+def update_venue(id):
+    # Load and validate the request data
+    venue_info = VenueSchema(exclude=['id']).load(request.json)
+    # Query the database for a venue with the given id
+    stmt = db.select(Venue).filter_by(id=id)
+    venue = db.session.scalar(stmt)
+
+    # Update the venue in the database
+    if venue:
+        authorization(venue.user_id)
+        venue.name = venue_info.get('name', venue.name)
+        venue.address = venue_info.get('address', venue.address)
+        venue.suburb = venue_info.get('suburb', venue.suburb)
+        venue.postcode = venue_info.get('postcode', venue.postcode)
+        db.session.commit()
+        # Return the updated venue
+        return VenueSchema().dump(venue)
+    # Return error message if venue does not exist
+    else:
+        return {'error':'Venue not found'}, 404
     
-# Allows admin to delete a venue
+# Allows admin or user who created venue to delete venue
 @venues_bp.route("/<int:id>", methods=['DELETE'])
 @jwt_required()
 def delete_venue(id):
-    admin_only()
     # Query the database for a venue with the given id
     stmt = db.select(Venue).filter_by(id=id)
     venue = db.session.scalar(stmt)
 
     # Delete the venue from the database
     if venue:
+        authorization(venue.user_id)
         db.session.delete(venue)
         db.session.commit()
         # Return empty list if successful
