@@ -1,5 +1,5 @@
 from init import db, ma
-from marshmallow import fields
+from marshmallow import fields, validate
 from marshmallow.validate import Length
 
 class User(db.Model):
@@ -12,12 +12,14 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
 
     venues = db.relationship('Venue', back_populates='user')
+    events = db.relationship('Event', back_populates='user')
 
 class UserSchema(ma.Schema):
-    venues = fields.Nested('VenueSchema', exclude=['user'], many=True)
+    venues = fields.Nested('VenueSchema', many=True, only=['id', 'name'])
     # Validation
     email = fields.Email(required=True)
     password = fields.String(required=True, validate=Length(min=6, error='Password must be a minimum of 6 characters'))
+    username = fields.String(required=True, validate=Length(min=1, error='Username must not be empty'))
 
     class Meta:
         fields = ('id', 'username', 'email', 'password', 'is_admin', 'venues')
