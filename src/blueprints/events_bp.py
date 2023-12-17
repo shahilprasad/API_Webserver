@@ -40,7 +40,7 @@ def create_event(venue_id):
 # Updating an event (either admin or user that created the event)
 @events_bp.route("/<int:id>", methods=['PUT', 'PATCH'])
 @jwt_required()
-def update_event(id):
+def update_event(venue_id, id):
     # Load and validate the request data
     event_info = EventSchema(exclude=['id']).load(request.json)
     # Query the database for an event with the given id
