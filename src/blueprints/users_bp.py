@@ -61,3 +61,21 @@ def get_users():
     stmt = db.select(User)
     users = db.session.scalars(stmt).all()
     return UserSchema(exclude=['password'], many=True).dump(users)
+
+# Allows admin or user to delete their account
+@users_bp.route('/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    # Query the database for a user with the given id
+    stmt = db.select(User).filter_by(id=id)
+    user = db.session.scalar(stmt)
+
+    # If the user exists, delete it
+    if user:
+        authorization(user.id)
+        db.session.delete(user)
+        db.session.commit()
+        return {}, 200
+    # Otherwise, return error message
+    else:
+        return {'error': 'User not found'}, 404
